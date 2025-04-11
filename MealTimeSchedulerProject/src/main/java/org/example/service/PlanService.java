@@ -96,7 +96,7 @@ public class PlanService {
             new File(DAILY_PLANS_DIR).mkdirs();
 
             String fullPath = DAILY_PLANS_DIR + filePath;
-            XmlUtils.serializeDailyPlan(plan, fullPath);
+            XmlUtils.serializeToXml(DailyPlan.class, fullPath);
         } catch (IOException e) {
             throw new RuntimeException("XML export failed", e);
         }

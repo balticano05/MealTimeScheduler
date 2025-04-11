@@ -1,10 +1,15 @@
 package org.example.view;
 
 import org.example.entity.User;
+import org.example.repository.UserRepository;
 import org.example.utils.ErrorHandler;
+import org.example.utils.Parser;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static org.example.utils.Parser.parseDoubleField;
+import static org.example.utils.Parser.parseIntField;
 
 public class UserSettingsPanel extends JPanel {
 
@@ -13,12 +18,17 @@ public class UserSettingsPanel extends JPanel {
     private JTextField ageField;
     private JComboBox<User.ActivityLevel> activityCombo;
 
-    public UserSettingsPanel() {
+    private final UserRepository userRepository;
+
+    public UserSettingsPanel(UserRepository userRepository) {
+        this.userRepository = userRepository;
         initComponents();
+        loadUserData();
     }
 
     private void initComponents() {
-        setLayout(new GridLayout(5, 2));
+        setLayout(new GridLayout(5, 2, 10, 10));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         add(new JLabel("Вес (кг):"));
         weightField = new JTextField();
@@ -41,18 +51,34 @@ public class UserSettingsPanel extends JPanel {
         add(saveButton);
     }
 
+    private void loadUserData() {
+        User user = userRepository.loadUser();
+        weightField.setText(String.format("%.1f", user.getWeight()));
+        heightField.setText(String.format("%.1f", user.getHeight()));
+        ageField.setText(String.valueOf(user.getAge()));
+        activityCombo.setSelectedItem(user.getActivityLevel());
+    }
+
     private void saveSettings() {
         try {
-
             User user = new User(
-                    Double.parseDouble(weightField.getText()),
-                    Double.parseDouble(heightField.getText()),
-                    Integer.parseInt(ageField.getText()),
+                    Parser.parseDoubleField(weightField.getText(), "Вес"),
+                    Parser.parseDoubleField(heightField.getText(), "Рост"),
+                    Parser.parseIntField(ageField.getText(), "Возраст"),
                     (User.ActivityLevel) activityCombo.getSelectedItem()
             );
 
+            userRepository.saveUser(user);
+            JOptionPane.showMessageDialog(this,
+                    "Настройки успешно сохранены!",
+                    "Успех",
+                    JOptionPane.INFORMATION_MESSAGE);
+
         } catch (NumberFormatException ex) {
             ErrorHandler.handleException(this, ex);
+        } catch (Exception ex) {
+            ErrorHandler.handleException(this,
+                    new RuntimeException("Ошибка при сохранении настроек", ex));
         }
     }
 

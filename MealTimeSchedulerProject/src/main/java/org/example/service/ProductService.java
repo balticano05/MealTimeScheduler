@@ -38,4 +38,8 @@ public class ProductService {
         return dbRepository;
     }
 
+    public List<Product> findAllProducts() {
+        return dbRepository.findALlProducts();
+    }
+
 }

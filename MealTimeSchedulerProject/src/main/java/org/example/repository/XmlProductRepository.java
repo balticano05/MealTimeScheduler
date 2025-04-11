@@ -21,7 +21,7 @@ public class XmlProductRepository {
 
     private void loadData() {
         try {
-            db = XmlUtils.deserializeFromXml(xmlFilePath);
+            db = XmlUtils.deserializeFromXml(xmlFilePath, Db.class);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load XML data", e);
         }

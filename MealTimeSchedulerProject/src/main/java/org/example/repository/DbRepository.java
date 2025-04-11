@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -28,7 +29,7 @@ public class DbRepository {
     public DbRepository(String dataPath) {
         this.dataPath = dataPath;
         try {
-            this.db = XmlUtils.deserializeFromXml(dataPath);
+            this.db = XmlUtils.deserializeFromXml(dataPath, Db.class);
         } catch (IOException e) {
             this.db = new Db();
             this.db.setCategories(new ArrayList<>());
@@ -41,6 +42,13 @@ public class DbRepository {
         } catch (IOException e) {
             throw new RuntimeException("Failed to save data", e);
         }
+    }
+
+    public List<Product> findALlProducts() {
+        return db.getCategories().stream()
+                .flatMap(category -> category.getProducts().stream())
+                .collect(Collectors.toList());
+
     }
 
     public List<Category> findCategories() {

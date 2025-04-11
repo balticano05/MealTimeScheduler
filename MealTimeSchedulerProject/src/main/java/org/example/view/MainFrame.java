@@ -1,6 +1,6 @@
 package org.example.view;
 
-import lombok.RequiredArgsConstructor;
+import org.example.repository.UserRepository;
 import org.example.service.PlanService;
 import org.example.service.ProductService;
 
@@ -25,7 +25,7 @@ public class MainFrame extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Каталог продуктов", new ProductCatalogPanel(productService));
         tabbedPane.addTab("План питания", new MealPlanPanel(planService, productService));
-        tabbedPane.addTab("Настройки пользователя", new UserSettingsPanel());
+        tabbedPane.addTab("Настройки пользователя", new UserSettingsPanel(new UserRepository()));
 
         add(tabbedPane);
     }

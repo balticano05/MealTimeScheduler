@@ -57,8 +57,7 @@ public class MealDetailsPanel extends JPanel {
         JDialog dialog = new JDialog();
         dialog.setLayout(new BorderLayout());
 
-        // Используем JList для выбора продуктов
-        JList<Product> productList = new JList<>(new Vector<>());
+        JList<Product> productList = new JList<>(new Vector<>(productService.findAllProducts()));
         productList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JButton selectButton = new JButton("Выбрать");
