@@ -1,23 +1,32 @@
 package org.example;
 
 import org.example.entity.Db;
+import org.example.repository.DbRepository;
+import org.example.service.PlanService;
+import org.example.service.ProductService;
+import org.example.utils.ErrorHandler;
 import org.example.utils.XmlUtils;
+import org.example.view.MainFrame;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class AppRunner {
 
     public static void runMealTimeScheduler(){
 
-        try {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                DbRepository dbRepository = new DbRepository("src/main/resources/food-data.xml");
+                ProductService productService = new ProductService(dbRepository);
+                PlanService planService = new PlanService(productService);
 
-            Db db = XmlUtils.deserializeFromXml("src/main/resources/food-data.xml");
-            System.out.println("Успешно загружено категорий: " + db.getCategories().size());
+                MainFrame mainFrame = new MainFrame(productService, planService);
+                mainFrame.setVisible(true);
 
-            System.out.println(db.getCategories().getFirst().getDescription());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+            } catch (Exception e) {
+                ErrorHandler.handleException(null, e);
+            }
+        });
     }
 }

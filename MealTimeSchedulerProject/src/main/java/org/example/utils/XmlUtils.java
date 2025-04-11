@@ -1,6 +1,7 @@
 package org.example.utils;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import org.example.entity.DailyPlan;
 import org.example.entity.Db;
 
 import java.io.File;
@@ -16,6 +17,10 @@ public class XmlUtils {
 
     public static void serializeToXml(Db db, String outputPath) throws IOException {
         xmlMapper.writeValue(new File(outputPath), db);
+    }
+
+    public static void serializeDailyPlan(DailyPlan plan, String outputPath) throws IOException {
+        xmlMapper.writeValue(new File(outputPath), plan);
     }
 
 }

@@ -26,4 +26,8 @@ public class Category {
     @JacksonXmlProperty(localName = "Product")
     private List<Product> products;
 
+    public void addProduct(Product product) {
+        products.add(product);
+    }
+
 }

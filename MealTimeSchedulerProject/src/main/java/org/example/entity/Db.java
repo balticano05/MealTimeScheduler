@@ -19,4 +19,8 @@ public class Db {
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<Category> categories;
 
+    public void addCategory(Category category) {
+        categories.add(category);
+    }
+
 }
