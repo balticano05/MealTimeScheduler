@@ -108,4 +108,43 @@ public class DbRepository {
                 .map(Category::getName)
                 .toList();
     }
+
+    public void addCategory(Category category) {
+        if(db.getCategories().stream().anyMatch(c -> c.getName().equalsIgnoreCase(category.getName()))) {
+            throw new IllegalArgumentException("Category already exists: " + category.getName());
+        }
+        db.getCategories().add(category);
+        save();
+    }
+
+    public void updateCategory(String oldName, Category updatedCategory) {
+        Category existing = db.getCategories().stream()
+                .filter(c -> c.getName().equals(oldName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Category not found: " + oldName));
+
+        if(!oldName.equals(updatedCategory.getName()) &&
+                db.getCategories().stream().anyMatch(c -> c.getName().equals(updatedCategory.getName()))) {
+            throw new IllegalArgumentException("Category name already exists: " + updatedCategory.getName());
+        }
+
+        existing.setName(updatedCategory.getName());
+        existing.setDescription(updatedCategory.getDescription());
+        save();
+    }
+
+    public void deleteCategory(String categoryName) {
+        Category category = db.getCategories().stream()
+                .filter(c -> c.getName().equals(categoryName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Category not found: " + categoryName));
+
+        if (!category.getProducts().isEmpty()) {
+            throw new IllegalStateException("Cannot delete non-empty category");
+        }
+
+        db.getCategories().remove(category);
+        save();
+    }
+
 }

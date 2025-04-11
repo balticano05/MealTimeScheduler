@@ -34,4 +34,8 @@ public class ProductService {
         return dbRepository.findAllCategoryNames();
     }
 
+    public DbRepository getRepository() {
+        return dbRepository;
+    }
+
 }

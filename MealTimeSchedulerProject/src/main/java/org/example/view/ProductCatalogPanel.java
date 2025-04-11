@@ -39,6 +39,10 @@ public class ProductCatalogPanel extends JPanel {
         deleteButton.addActionListener(e -> deleteSelectedProduct());
         filterPanel.add(deleteButton);
 
+        JButton manageCategoriesButton = new JButton("Управление категориями");
+        manageCategoriesButton.addActionListener(e -> showCategoryManagementDialog());
+        filterPanel.add(manageCategoriesButton);
+
         add(filterPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(addButton, BorderLayout.SOUTH);
@@ -137,4 +141,15 @@ public class ProductCatalogPanel extends JPanel {
             loadCategories();
         }
     }
+
+    private void showCategoryManagementDialog() {
+        CategoryManagementDialog dialog = new CategoryManagementDialog(
+                (Frame) SwingUtilities.getWindowAncestor(this),
+                productService.getRepository()
+        );
+        dialog.setVisible(true);
+        loadCategories();
+        filterProducts();
+    }
+
 }
