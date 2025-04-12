@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -15,4 +16,14 @@ public class Meal {
     public Meal(String name) {
         this.name = name;
     }
+
+    public List<MealItem> getItems() {
+        return this.items;
+    }
+
+
+    public void addItem(MealItem item) {
+        items.add(item);
+    }
+
 }

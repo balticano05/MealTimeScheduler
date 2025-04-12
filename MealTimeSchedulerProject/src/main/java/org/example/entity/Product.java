@@ -33,4 +33,8 @@ public class Product {
     @JacksonXmlProperty(localName = "Calories")
     private double calories;
 
+    public void setProtein(String protein) {
+        this.protein = protein.replace(',', '.');
+    }
+
 }

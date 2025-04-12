@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Каталог продуктов", new ProductCatalogPanel(productService));
+        tabbedPane.addTab("Каталог продуктов", new ProductCatalogPanel(productService, planService));
         tabbedPane.addTab("План питания", new MealPlanPanel(planService, productService));
         tabbedPane.addTab("Настройки пользователя", new UserSettingsPanel(new UserRepository()));
 

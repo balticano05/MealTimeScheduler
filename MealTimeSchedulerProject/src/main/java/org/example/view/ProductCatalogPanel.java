@@ -2,7 +2,9 @@ package org.example.view;
 
 import lombok.AllArgsConstructor;
 import org.example.entity.Product;
+import org.example.service.PlanService;
 import org.example.service.ProductService;
+import org.example.utils.Parser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +15,12 @@ public class ProductCatalogPanel extends JPanel {
 
     private ProductService productService;
     private JComboBox<String> categoryComboBox;
+    private PlanService planService;
     private JTable productTable;
 
-    public ProductCatalogPanel(ProductService productService) {
+    public ProductCatalogPanel(ProductService productService, PlanService planService) {
         this.productService = productService;
+        this.planService = planService;
         initComponents();
     }
 
@@ -38,6 +42,10 @@ public class ProductCatalogPanel extends JPanel {
         JButton deleteButton = new JButton("Удалить");
         deleteButton.addActionListener(e -> deleteSelectedProduct());
         filterPanel.add(deleteButton);
+
+        JButton addToPlanButton = new JButton("Добавить в план");
+        addToPlanButton.addActionListener(e -> addToMeal());
+        filterPanel.add(addToPlanButton);
 
         JButton manageCategoriesButton = new JButton("Управление категориями");
         manageCategoriesButton.addActionListener(e -> showCategoryManagementDialog());
@@ -73,10 +81,10 @@ public class ProductCatalogPanel extends JPanel {
 
         JTextField nameField = new JTextField();
         JComboBox<String> categoryCombo = new JComboBox<>();
-        JSpinner caloriesSpinner = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 1000.0, 1.0));
-        JSpinner proteinSpinner = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 100.0, 0.1));
-        JSpinner fatsSpinner = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 100.0, 0.1));
-        JSpinner carbsSpinner = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 100.0, 0.1));
+        JSpinner caloriesSpinner = createDecimalSpinner(0.0, 0.0, 1000.0, 1.0, "#0");
+        JSpinner proteinSpinner = createDecimalSpinner(0.0, 0.0, 100.0, 0.1, "#0.00");
+        JSpinner fatsSpinner = createDecimalSpinner(0.0, 0.0, 100.0, 0.1, "#0.00");
+        JSpinner carbsSpinner = createDecimalSpinner(0.0, 0.0, 100.0, 0.1, "#0.00");
 
         List<String> categories = productService.findAllCategoryNames();
         categories.forEach(categoryCombo::addItem);
@@ -103,9 +111,9 @@ public class ProductCatalogPanel extends JPanel {
                 Product product = new Product();
                 product.setName(nameField.getText());
                 product.setCalories((Double) caloriesSpinner.getValue());
-                product.setProtein(String.valueOf(proteinSpinner.getValue()));
-                product.setFats(String.valueOf(fatsSpinner.getValue()));
-                product.setCarbs(String.valueOf(carbsSpinner.getValue()));
+                product.setProtein(Parser.formatDoubleValue(proteinSpinner.getValue()));
+                product.setFats(Parser.formatDoubleValue(fatsSpinner.getValue()));
+                product.setCarbs(Parser.formatDoubleValue(carbsSpinner.getValue()));
 
                 String category = (String) categoryCombo.getSelectedItem();
 
@@ -131,6 +139,32 @@ public class ProductCatalogPanel extends JPanel {
         dialog.setVisible(true);
     }
 
+    private JSpinner createDecimalSpinner(double initialValue,
+                                          double min,
+                                          double max,
+                                          double step,
+                                          String pattern) {
+        // Создаем модель с указанными параметрами
+        SpinnerNumberModel model = new SpinnerNumberModel(
+                initialValue,
+                min,
+                max,
+                step
+        );
+
+        JSpinner spinner = new JSpinner(model);
+
+        // Настраиваем формат отображения
+        JSpinner.NumberEditor editor = new JSpinner.NumberEditor(
+                spinner,
+                pattern
+        );
+
+        spinner.setEditor(editor);
+
+        return spinner;
+    }
+
     private void deleteSelectedProduct() {
         int selectedRow = productTable.getSelectedRow();
         if (selectedRow >= 0) {
@@ -150,6 +184,25 @@ public class ProductCatalogPanel extends JPanel {
         dialog.setVisible(true);
         loadCategories();
         filterProducts();
+    }
+
+    private void addToMeal() {
+        int selectedRow = productTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            Product product = ((ProductTableModel) productTable.getModel()).getProductAt(selectedRow);
+            List<String> mealNames = planService.getMealNames(); // Новый метод в PlanService
+            AddToMealDialog dialog = new AddToMealDialog(
+                    (Frame) SwingUtilities.getWindowAncestor(this),
+                    mealNames
+            );
+            if (dialog.showDialog()) {
+                planService.addProductToMeal(
+                        dialog.getSelectedMeal(),
+                        product,
+                        dialog.getWeight()
+                );
+            }
+        }
     }
 
 }

@@ -15,6 +15,7 @@ public class MealDetailsPanel extends JPanel {
     private final Meal meal;
     private final ProductService productService;
     private final PlanService planService;
+    private MealProductsTableModel tableModel;
     private JTable productsTable;
 
     public MealDetailsPanel(Meal meal, ProductService productService, PlanService planService) {
@@ -26,6 +27,9 @@ public class MealDetailsPanel extends JPanel {
 
     private void initComponents() {
         setLayout(new BorderLayout());
+
+        tableModel = new MealProductsTableModel(meal.getItems());
+        productsTable = new JTable(tableModel);
 
         // Таблица продуктов в приеме пищи
         productsTable = new JTable(new MealProductsTableModel(meal.getItems()));
@@ -61,12 +65,15 @@ public class MealDetailsPanel extends JPanel {
         productList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JButton selectButton = new JButton("Выбрать");
+
         selectButton.addActionListener(e -> {
             Product selectedProduct = productList.getSelectedValue();
             if (selectedProduct != null) {
-                planService.addProductToMeal(meal, selectedProduct, 100.0);
-                ((AbstractTableModel)productsTable.getModel()).fireTableDataChanged();
-                dialog.dispose();
+                planService.addProductToMeal(
+                        meal.getName(), // Используем имя приема пищи
+                        selectedProduct,
+                        100.0
+                );
             }
         });
 
