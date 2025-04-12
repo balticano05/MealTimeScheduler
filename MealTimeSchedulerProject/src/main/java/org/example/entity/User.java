@@ -16,6 +16,21 @@ public class User {
     private ActivityLevel activityLevel;
 
     public enum ActivityLevel {
-        LOW, NORMAL, MEDIUM, HIGH
+        LOW("Низкая"),
+        NORMAL("Нормальная"),
+        MEDIUM("Средняя"),
+        HIGH("Высокая");
+
+        private final String displayName;
+
+        ActivityLevel(String displayName) {
+            this.displayName = displayName;
+        }
+
+        @Override
+        public String toString() {
+            return displayName;
+        }
+
     }
 }

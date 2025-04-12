@@ -2,6 +2,7 @@ package org.example.view;
 
 import org.example.entity.User;
 import org.example.repository.UserRepository;
+import org.example.service.CalorieService;
 import org.example.utils.ErrorHandler;
 import org.example.utils.Parser;
 
@@ -69,9 +70,11 @@ public class UserSettingsPanel extends JPanel {
             );
 
             userRepository.saveUser(user);
+
+            double norm = CalorieService.calculateDailyCalorieNorm(user);
             JOptionPane.showMessageDialog(this,
-                    "Настройки успешно сохранены!",
-                    "Успех",
+                    "Дневная норма: " + String.format("%.1f ккал", norm),
+                    "Норма обновлена",
                     JOptionPane.INFORMATION_MESSAGE);
 
         } catch (NumberFormatException ex) {

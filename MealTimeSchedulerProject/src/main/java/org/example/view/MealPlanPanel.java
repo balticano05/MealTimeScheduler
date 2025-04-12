@@ -1,6 +1,8 @@
 package org.example.view;
 
 import org.example.entity.*;
+import org.example.repository.UserRepository;
+import org.example.service.CalorieService;
 import org.example.service.PlanService;
 import org.example.service.ProductService;
 
@@ -10,10 +12,13 @@ import java.time.LocalDate;
 
 public class MealPlanPanel extends JPanel implements PlanService.PlanChangeListener{
 
+    private final UserRepository userRepository;;
+    private JProgressBar progressBar;
     private final PlanService planService;
     private final ProductService productService;
 
-    public MealPlanPanel(PlanService planService, ProductService productService) {
+    public MealPlanPanel(PlanService planService, ProductService productService, UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.planService = planService;
         this.productService = productService;
         planService.addPlanChangeListener(this);
@@ -59,6 +64,10 @@ public class MealPlanPanel extends JPanel implements PlanService.PlanChangeListe
         removeAll();
 
         DailyPlan currentPlan = planService.getCurrentPlan();
+        User user = userRepository.loadUser();
+
+        double dailyNorm = CalorieService.calculateDailyCalorieNorm(user);
+
         JTabbedPane mealTabs = new JTabbedPane();
 
         currentPlan.getMeals().forEach(meal -> {
@@ -67,11 +76,22 @@ public class MealPlanPanel extends JPanel implements PlanService.PlanChangeListe
         });
 
         NutritionInfo total = calculateTotalNutrition(currentPlan);
-        JPanel infoPanel = new JPanel();
-        infoPanel.add(new JLabel(String.format("Калории: %.1f", total.getCalories())));
-        infoPanel.add(new JLabel(String.format("Белки: %.1fг", total.getProtein())));
-        infoPanel.add(new JLabel(String.format("Жиры: %.1fг", total.getFats())));
-        infoPanel.add(new JLabel(String.format("Углеводы: %.1fг", total.getCarbs())));
+
+        progressBar = new JProgressBar(0, (int) Math.ceil(dailyNorm));
+        progressBar.setValue((int) Math.ceil(total.getCalories()));
+        progressBar.setStringPainted(true);
+        progressBar.setString(String.format("%.0f/%.0f ккал", total.getCalories(), dailyNorm));
+
+        JPanel infoPanel = new JPanel(new GridLayout(2, 1));
+        JPanel nutritionPanel = new JPanel();
+
+        nutritionPanel.add(new JLabel(String.format("Калории: %.1f/%.1f", total.getCalories(), dailyNorm)));
+        nutritionPanel.add(new JLabel(String.format("Белки: %.1fг", total.getProtein())));
+        nutritionPanel.add(new JLabel(String.format("Жиры: %.1fг", total.getFats())));
+        nutritionPanel.add(new JLabel(String.format("Углеводы: %.1fг", total.getCarbs())));
+
+        infoPanel.add(nutritionPanel);
+        infoPanel.add(progressBar);
 
         add(mealTabs, BorderLayout.CENTER);
         add(infoPanel, BorderLayout.SOUTH);
