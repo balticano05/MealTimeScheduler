@@ -1,6 +1,5 @@
 package org.example.view;
 
-import lombok.RequiredArgsConstructor;
 import org.example.entity.Product;
 
 import javax.swing.table.AbstractTableModel;

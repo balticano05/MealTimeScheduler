@@ -31,13 +31,8 @@ public class MealDetailsPanel extends JPanel {
         tableModel = new MealProductsTableModel(meal.getItems());
         productsTable = new JTable(tableModel);
 
-        // Таблица продуктов в приеме пищи
         productsTable = new JTable(new MealProductsTableModel(meal.getItems()));
         productsTable.setRowHeight(25);
-
-        // Настройка колонки с весом
-        JSpinner weightSpinner = new JSpinner(new SpinnerNumberModel(100.0, 1.0, 1000.0, 1.0));
-        productsTable.getColumnModel().getColumn(1).setCellEditor(new SpinnerEditor());
 
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton addButton = new JButton("Добавить продукт");
@@ -93,10 +88,7 @@ public class MealDetailsPanel extends JPanel {
     }
 
     private void saveChanges() {
-        // Логика сохранения изменений, если требуется
         JOptionPane.showMessageDialog(this, "Изменения сохранены!");
     }
-
-
 
 }

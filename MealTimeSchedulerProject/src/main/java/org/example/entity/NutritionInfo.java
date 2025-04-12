@@ -8,11 +8,8 @@ import lombok.NoArgsConstructor;
 public class NutritionInfo {
 
     private double calories;
-
     private double protein;
-
     private double fats;
-
     private double carbs;
 
     public void addCalories(double calories) {

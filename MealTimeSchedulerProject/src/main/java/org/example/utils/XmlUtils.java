@@ -31,4 +31,5 @@ public final class XmlUtils {
             throw new IOException("Failed to serialize object to: " + outputPath, e);
         }
     }
+
 }

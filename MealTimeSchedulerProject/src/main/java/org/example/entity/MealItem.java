@@ -8,6 +8,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class MealItem {
+
     private Product product;
-    private double weight = 100.0; // default 100g
+    private double weight = 100.0;
+
 }

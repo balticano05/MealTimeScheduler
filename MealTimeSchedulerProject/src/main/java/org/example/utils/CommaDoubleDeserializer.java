@@ -11,7 +11,6 @@ public class CommaDoubleDeserializer extends JsonDeserializer<Double> {
 
     @Override
     public Double deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
-
         String value = jsonParser.getText().replace(",", ".");
 
         return Double.parseDouble(value);

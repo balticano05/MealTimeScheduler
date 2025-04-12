@@ -10,12 +10,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+
     private double weight;
     private double height;
     private int age;
     private ActivityLevel activityLevel;
 
     public enum ActivityLevel {
+
         LOW("Низкая"),
         NORMAL("Нормальная"),
         MEDIUM("Средняя"),
@@ -33,4 +35,5 @@ public class User {
         }
 
     }
+
 }

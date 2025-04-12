@@ -9,9 +9,6 @@ import org.example.utils.Parser;
 import javax.swing.*;
 import java.awt.*;
 
-import static org.example.utils.Parser.parseDoubleField;
-import static org.example.utils.Parser.parseIntField;
-
 public class UserSettingsPanel extends JPanel {
 
     private JTextField weightField;

@@ -8,10 +8,10 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.util.List;
 
-
 public class CategoryManagementDialog extends JDialog {
-    private final DbRepository repository;
+
     private JTable table;
+    private final DbRepository repository;
     private List<Category> categories;
 
     public CategoryManagementDialog(Frame parent, DbRepository repository) {
@@ -22,10 +22,10 @@ public class CategoryManagementDialog extends JDialog {
     }
 
     private void initComponents() {
+
         setLayout(new BorderLayout());
         setSize(500, 400);
 
-        // Таблица категорий
         table = new JTable(new AbstractTableModel() {
             String[] columns = {"Название", "Описание", "Продуктов"};
 
@@ -56,7 +56,6 @@ public class CategoryManagementDialog extends JDialog {
             }
         });
 
-        // Панель кнопок
         JPanel buttonPanel = new JPanel();
         JButton addButton = new JButton("Добавить");
         JButton editButton = new JButton("Изменить");
@@ -111,4 +110,5 @@ public class CategoryManagementDialog extends JDialog {
             }
         }
     }
+
 }

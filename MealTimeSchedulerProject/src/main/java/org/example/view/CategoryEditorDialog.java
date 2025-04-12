@@ -1,83 +1,140 @@
 package org.example.view;
 
+import lombok.Getter;
 import org.example.entity.Category;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+@Getter
 public class CategoryEditorDialog extends JDialog {
 
     private boolean saved = false;
     private Category category;
-
     private JTextField nameField;
     private JTextArea descriptionArea;
 
     public CategoryEditorDialog(Frame parent, Category category) {
         super(parent, "Редактирование категории", true);
-        this.category = category != null ? category : new Category("", "", new ArrayList<>());
-        initComponents();
+        initializeCategory(category);
+        initializeDialog();
     }
 
-    private void initComponents() {
-        setLayout(new BorderLayout(5, 5));
-        setSize(400, 300);
+    private void initializeCategory(Category category) {
+        this.category = category != null ? category : new Category("", "", new ArrayList<>());
+    }
 
-        // Поля ввода
-        JPanel inputPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+    private void initializeDialog() {
+        setLayout(new BorderLayout(10, 10));
+        setupMainComponents();
+        setupDialogProperties();
+    }
 
-        JPanel namePanel = new JPanel(new BorderLayout());
-        namePanel.add(new JLabel("Название:"), BorderLayout.NORTH);
+    private void setupMainComponents() {
+        add(createInputPanel(), BorderLayout.CENTER);
+        add(createButtonPanel(), BorderLayout.SOUTH);
+    }
+
+    private JPanel createInputPanel() {
+        JPanel inputPanel = new JPanel(new GridLayout(2, 1, 5, 10));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        inputPanel.add(createNamePanel());
+        inputPanel.add(createDescriptionPanel());
+        return inputPanel;
+    }
+
+    private JPanel createNamePanel() {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.add(createLabel("Название:"), BorderLayout.NORTH);
+        panel.add(createNameField(), BorderLayout.CENTER);
+        return panel;
+    }
+
+    private JPanel createDescriptionPanel() {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.add(createLabel("Описание:"), BorderLayout.NORTH);
+        panel.add(createDescriptionScrollPane(), BorderLayout.CENTER);
+        return panel;
+    }
+
+    private JLabel createLabel(String text) {
+        return new JLabel(text);
+    }
+
+    private JTextField createNameField() {
         nameField = new JTextField(category.getName());
-        namePanel.add(nameField, BorderLayout.CENTER);
+        nameField.setPreferredSize(new Dimension(300, 25));
+        return nameField;
+    }
 
-        JPanel descPanel = new JPanel(new BorderLayout());
-        descPanel.add(new JLabel("Описание:"), BorderLayout.NORTH);
-        descriptionArea = new JTextArea(category.getDescription());
-        descPanel.add(new JScrollPane(descriptionArea), BorderLayout.CENTER);
+    private JScrollPane createDescriptionScrollPane() {
+        descriptionArea = new JTextArea(category.getDescription(), 5, 20);
+        descriptionArea.setLineWrap(true);
+        return new JScrollPane(descriptionArea);
+    }
 
-        inputPanel.add(namePanel);
-        inputPanel.add(descPanel);
+    private JPanel createButtonPanel() {
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 10));
 
-        // Кнопки
-        JPanel buttonPanel = new JPanel();
-        JButton saveButton = new JButton("Сохранить");
-        JButton cancelButton = new JButton("Отмена");
+        buttonPanel.add(createSaveButton());
+        buttonPanel.add(createCancelButton());
+        return buttonPanel;
+    }
 
-        saveButton.addActionListener(e -> {
-            if(validateInput()) {
-                category.setName(nameField.getText().trim());
-                category.setDescription(descriptionArea.getText().trim());
-                saved = true;
-                dispose();
-            }
-        });
+    private JButton createSaveButton() {
+        JButton button = new JButton("Сохранить");
+        button.addActionListener(e -> handleSaveAction());
+        return button;
+    }
 
-        cancelButton.addActionListener(e -> dispose());
+    private JButton createCancelButton() {
+        JButton button = new JButton("Отмена");
+        button.addActionListener(e -> dispose());
+        return button;
+    }
 
-        buttonPanel.add(saveButton);
-        buttonPanel.add(cancelButton);
+    private void handleSaveAction() {
+        if(validateInput()) {
+            updateCategoryData();
+            saved = true;
+            dispose();
+        }
+    }
 
-        add(inputPanel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
+    private void updateCategoryData() {
+        category.setName(nameField.getText().trim());
+        category.setDescription(descriptionArea.getText().trim());
+    }
+
+    private void setupDialogProperties() {
+        setSize(400, 300);
+        setLocationRelativeTo(getParent());
+        setResizable(false);
     }
 
     private boolean validateInput() {
         if(nameField.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Название категории не может быть пустым!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            showValidationError("Название категории не может быть пустым!");
             return false;
         }
         return true;
     }
 
+    private void showValidationError(String message) {
+        JOptionPane.showMessageDialog(
+                this,
+                message,
+                "Ошибка",
+                JOptionPane.ERROR_MESSAGE
+        );
+    }
+
     public boolean showDialog() {
         setVisible(true);
         return saved;
-    }
-
-    public Category getCategory() {
-        return category;
     }
 
 }

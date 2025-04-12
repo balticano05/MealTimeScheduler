@@ -5,6 +5,7 @@ import org.example.entity.User;
 public class CalorieService {
 
     public static double calculateDailyCalorieNorm(User user) {
+
         double bmr = 447.593 + (9.247 * user.getWeight()) +
                 (3.098 * user.getHeight()) - (4.330 * user.getAge());
 

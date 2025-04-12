@@ -144,7 +144,6 @@ public class ProductCatalogPanel extends JPanel {
                                           double max,
                                           double step,
                                           String pattern) {
-        // Создаем модель с указанными параметрами
         SpinnerNumberModel model = new SpinnerNumberModel(
                 initialValue,
                 min,
@@ -154,7 +153,6 @@ public class ProductCatalogPanel extends JPanel {
 
         JSpinner spinner = new JSpinner(model);
 
-        // Настраиваем формат отображения
         JSpinner.NumberEditor editor = new JSpinner.NumberEditor(
                 spinner,
                 pattern

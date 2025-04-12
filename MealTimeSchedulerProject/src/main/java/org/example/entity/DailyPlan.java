@@ -16,8 +16,4 @@ public class DailyPlan {
     private List<Meal> meals = new ArrayList<>();
     private double dailyCalorieNorm;
 
-    public List<Meal> getMeals() {
-        return meals;
-    }
-
 }

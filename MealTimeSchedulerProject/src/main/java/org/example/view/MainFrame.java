@@ -34,6 +34,7 @@ public class MainFrame extends JFrame {
         tabbedPane.addTab("Настройки пользователя", new UserSettingsPanel(userRepository));
 
         add(tabbedPane);
+
     }
 
 }

@@ -20,11 +20,6 @@ public class ProductService {
         dbRepository.save();
     }
 
-    public void updateProduct(Product product) {
-        dbRepository.update(product);
-        dbRepository.save();
-    }
-
     public void deleteProductByName(String productName) {
         dbRepository.delete(productName);
         dbRepository.save();
