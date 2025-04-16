@@ -1,8 +1,10 @@
 package org.example.view;
 
 import org.example.entity.MealItem;
+import org.example.service.PlanService;
 import org.example.utils.Parser;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
@@ -10,9 +12,11 @@ public class MealProductsTableModel extends AbstractTableModel {
 
     private final List<MealItem> items;
     private final String[] columns = {"Продукт", "Вес (г)", "Калории", "Белки", "Жиры", "Углеводы"};
+    private final PlanService planService;
 
-    public MealProductsTableModel(List<MealItem> items) {
+    public MealProductsTableModel(List<MealItem> items, PlanService planService) {
         this.items = items;
+        this.planService = planService;
     }
 
     @Override
@@ -47,6 +51,25 @@ public class MealProductsTableModel extends AbstractTableModel {
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return columnIndex == 0 ? String.class : Double.class;
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return column == 1;
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int row, int column) {
+        if (column == 1) {
+            try {
+                double newWeight = Double.parseDouble(aValue.toString());
+                items.get(row).setWeight(newWeight);
+                planService.savePlan();
+                fireTableCellUpdated(row, column);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Некорректное значение веса");
+            }
+        }
     }
 
 }

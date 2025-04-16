@@ -22,16 +22,16 @@ public class MealDetailsPanel extends JPanel {
         this.meal = meal;
         this.productService = productService;
         this.planService = planService;
+        tableModel = new MealProductsTableModel(meal.getItems(), planService);
         initComponents();
     }
 
     private void initComponents() {
         setLayout(new BorderLayout());
 
-        tableModel = new MealProductsTableModel(meal.getItems());
         productsTable = new JTable(tableModel);
 
-        productsTable = new JTable(new MealProductsTableModel(meal.getItems()));
+        productsTable = new JTable(tableModel);
         productsTable.setRowHeight(25);
 
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -83,6 +83,7 @@ public class MealDetailsPanel extends JPanel {
         int selectedRow = productsTable.getSelectedRow();
         if (selectedRow >= 0) {
             meal.getItems().remove(selectedRow);
+            planService.savePlan();
             ((AbstractTableModel)productsTable.getModel()).fireTableDataChanged();
         }
     }

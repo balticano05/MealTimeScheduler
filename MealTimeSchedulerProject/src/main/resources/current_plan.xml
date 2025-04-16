@@ -1,0 +1,40 @@
+<DailyPlan>
+  <date>2025-04-16</date>
+  <meals>
+    <meals>
+      <name>Завтрак</name>
+      <items>
+        <items>
+          <product>
+            <Name>Вино белое сладкое 12% алкоголя</Name>
+            <Gramms>100.0</Gramms>
+            <Protein>0.00</Protein>
+            <Fats>0.00</Fats>
+            <Carbs>2.30</Carbs>
+            <Calories>98.0</Calories>
+          </product>
+          <weight>100.0</weight>
+        </items>
+        <items>
+          <product>
+            <Name>Виски 40% алкоголя</Name>
+            <Gramms>100.0</Gramms>
+            <Protein>0.00</Protein>
+            <Fats>0,00</Fats>
+            <Carbs>0,00</Carbs>
+            <Calories>220.0</Calories>
+          </product>
+          <weight>100.0</weight>
+        </items>
+      </items>
+    </meals>
+    <meals>
+      <name>Обед</name>
+      <items/>
+    </meals>
+    <meals>
+      <name>Ужин</name>
+      <items/>
+    </meals>
+  </meals>
+</DailyPlan>

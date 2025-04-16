@@ -160,6 +160,14 @@
       <Carbs>0,00</Carbs>
       <Calories>220.0</Calories>
     </Product>
+    <Product>
+      <Name></Name>
+      <Gramms>0.0</Gramms>
+      <Protein>0.00</Protein>
+      <Fats>0.00</Fats>
+      <Carbs>0.00</Carbs>
+      <Calories>0.0</Calories>
+    </Product>
   </Category>
   <Category name="Готовые блюда" description="">
     <Product>

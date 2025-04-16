@@ -1,7 +1,9 @@
 package org.example.utils;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.example.entity.DailyPlan;
 import org.example.entity.Db;
 
@@ -12,8 +14,12 @@ public final class XmlUtils {
 
     private static final XmlMapper XML_MAPPER = new XmlMapper();
 
+
     static {
         XML_MAPPER.configure(SerializationFeature.INDENT_OUTPUT, true);
+        XML_MAPPER.registerModule(new JavaTimeModule());
+        XML_MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        XML_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public static <T> T deserializeFromXml(String filePath, Class<T> valueType) throws IOException {
